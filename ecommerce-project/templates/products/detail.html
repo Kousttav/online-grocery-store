@@ -1,0 +1,137 @@
+{% extends "base.html" %}
+
+{% block title %}{{ product.name }} - GO MART{% endblock %}
+
+{% block contents %}
+<section class="product-detail">
+    <div class="container">
+        <div class="product-main">
+            <!-- Product Images -->
+            <div class="product-gallery">
+                <div class="main-image">
+                    <img src="{{ url_for('static', filename='images/products/' + product.image_url) }}" alt="{{ product.name }}">
+                </div>
+                <div class="thumbnail-grid">
+                    {% for image in product.additional_images %}
+                    <div class="thumbnail">
+                        <img src="{{ image }}" alt="{{ product.name }} thumbnail">
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Product Info -->
+            <div class="product-info">
+                <h1>{{ product.name }}</h1>
+
+                <div class="rating-container">
+                    <div class="star-rating">
+                        {% for i in range(5) %}
+                            {% if i < product.rating %}
+                                <i class="fas fa-star"></i>
+                            {% else %}
+                                <i class="far fa-star"></i>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                    <span class="review-count">({{ product.review_count }} reviews)</span>
+                </div>
+
+                <div class="price-container">
+                    {% if product.discount %}
+                    <div class="discounted-price">
+                        <span class="current-price">${{ product.price }}</span>
+                        <span class="original-price">${{ product.original_price }}</span>
+                        <span class="discount-badge">Save {{ product.discount }}%</span>
+                    </div>
+                    {% else %}
+                    <span class="current-price">${{ product.price }}</span>
+                    {% endif %}
+                </div>
+
+                <div class="description">
+                    <p>{{ product.description }}</p>
+                </div>
+
+                <div class="availability">
+                    <span>Availability:</span>
+                    {% if product.in_stock %}
+                    <span class="in-stock">In Stock ({{ product.stock_quantity }} items)</span>
+                    {% else %}
+                    <span class="out-of-stock">Out of Stock</span>
+                    {% endif %}
+                </div>
+
+                <div class="quantity-selector">
+                    <label for="quantity">Quantity:</label>
+                    <div class="quantity-controls">
+                        <button class="quantity-minus">-</button>
+                        <input type="number" id="quantity" value="1" min="1" max="{{ product.stock_quantity }}">
+                        <button class="quantity-plus">+</button>
+                    </div>
+                </div>
+
+                <button class="add-to-cart" {% if not product.in_stock %}disabled{% endif %}>
+                    Add to Cart
+                </button>
+
+                <div class="product-meta">
+                    <div class="meta-item">
+                        <span>Category:</span>
+                        <span>{{ product.category }}</span>
+                    </div>
+                    <div class="meta-item">
+                        <span>Brand:</span>
+                        <span>{{ product.brand }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Product Tabs -->
+        <div class="product-tabs">
+            <nav class="tabs-nav">
+                <button class="tab-button active">Description</button>
+                <button class="tab-button">Reviews</button>
+                <button class="tab-button">Shipping</button>
+            </nav>
+            <div class="tabs-content">
+                <div class="tab-panel active">
+                    <p>{{ product.long_description }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.querySelectorAll('.thumbnail img').forEach(thumb => {
+        thumb.addEventListener('click', function () {
+            document.querySelector('.main-image img').src = this.src;
+        });
+    });
+
+    document.querySelector('.quantity-plus').addEventListener('click', function () {
+        const input = document.querySelector('#quantity');
+        input.value = parseInt(input.value) + 1;
+    });
+
+    document.querySelector('.quantity-minus').addEventListener('click', function () {
+        const input = document.querySelector('#quantity');
+        if (parseInt(input.value) > 1) {
+            input.value = parseInt(input.value) - 1;
+        }
+    });
+
+    document.querySelectorAll('.tab-button').forEach(button => {
+        button.addEventListener('click', function () {
+            document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-panel').forEach(panel => panel.classList.remove('active'));
+
+            this.classList.add('active');
+        });
+    });
+</script>
+{% endblock %}

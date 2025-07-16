@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% block contents %}
+<!-- Hero Section -->
+<section class="showcase-area" id="showcase">
+    <div class="showcase-container single-slider">
+        <h1 class="main-title">Eat Right Food</h1>
+        <p>Eat Healthy food, it is good for your health</p>
+        <a href="/products" class="btn btn-primary">Shop Now</a>
+    </div>
+    <!-- Slider Navigation -->
+    <div class="slider-nav">
+        <a href="#" data-index="0"></a>
+        <a href="#" data-index="1"></a>
+        <a href="#" data-index="2"></a>
+        <a href="#" data-index="3"></a>
+    </div>
+</section>
+<section class="featured-products">
+    <div class="container">
+        <h2 class="section-title">Featured Products</h2>
+        <div class="product-grid">
+            {% for product in featured_products %}
+            <div class="product-card">
+                <img src="{{ url_for('static', filename='images/products/' + product.image_url) }}"
+                    alt="{{ product.name }}" class="product-image">
+                <div class="product-info">
+                    <h3 class="product-name">{{ product.name }}</h3>
+                    <p class="product-price">${{ "%.2f"|format(product.price) }}</p>
+                    <a href="/products/{{ product.id }}" class="btn btn-outline">View Details</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<section class="cta">
+    <div class="container">
+        <h3 class="cta-title">Ready to shop?</h3>
+        <a href="/products" class="btn btn-secondary">Browse All Products</a>
+    </div>
+</section>
+{% endblock %}

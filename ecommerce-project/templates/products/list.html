@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block title %}All Products - GO MART{% endblock %}
+
+{% block contents %}
+<section>
+    <div class="container">
+        <div class="header-section">
+            <h1>All Products</h1>
+            <div class="sort-options">
+                <select>
+                    <option>Sort by: Featured</option>
+                    <option>Price: Low to High</option>
+                    <option>Price: High to Low</option>
+                    <option>Rating</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="product-grid">
+            {% for product in products %}
+            <div class="product-card">
+                <a href="/products/{{ product.id }}">
+                    <div class="product-image-container">
+                        <img src="{{ url_for('static', filename='images/products/' + product.image_url) }}"
+                            alt="{{ product.name }}">
+                        {% if product.discount %}
+                        {% if product.discount.endswith('%') %}
+                        <span class="discount-badge">-{{ product.discount }}</span>
+                        {% else %}
+                        <span class="discount-badge">-{{ product.discount }}%</span>
+                        {% endif %}
+                        {% endif %}
+
+                    </div>
+                    <div class="product-info">
+                        <h3>{{ product.name }}</h3>
+                        <div class="price-rating">
+                            <div class="price-container">
+                                {% if product.discount %}
+                                <span class="original-price">₹{{ product.original_price }}</span>
+                                {% endif %}
+                                <span class="current-price">₹{{ product.price }}</span>
+                            </div>
+                            <div class="rating">
+                                {% for i in range(5) %}
+                                {% if i < product.rating %} <i class="fas fa-star"></i>
+                                    {% else %}
+                                    <i class="far fa-star"></i>
+                                    {% endif %}
+                                    {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="pagination">
+            <nav>
+                <a href="#" class="page-nav">Previous</a>
+                <a href="#" class="page-number">1</a>
+                <a href="#" class="page-number">2</a>
+                <a href="#" class="page-number">3</a>
+                <a href="#" class="page-nav">Next</a>
+            </nav>
+        </div>
+    </div>
+</section>
+{% endblock %}
