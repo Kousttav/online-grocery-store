@@ -4,12 +4,13 @@
 
 {% block contents %}
 <section class="product-detail">
-    <div class="container">
+    <div class="detailspage-container">
         <div class="product-main">
             <!-- Product Images -->
             <div class="product-gallery">
                 <div class="main-image">
-                    <img src="{{ url_for('static', filename='images/products/' + product.image_url) }}" alt="{{ product.name }}">
+                    <img src="{{ url_for('static', filename='images/products/' + product.image_url) }}"
+                        alt="{{ product.name }}">
                 </div>
                 <div class="thumbnail-grid">
                     {% for image in product.additional_images %}
@@ -27,12 +28,11 @@
                 <div class="rating-container">
                     <div class="star-rating">
                         {% for i in range(5) %}
-                            {% if i < product.rating %}
-                                <i class="fas fa-star"></i>
+                        {% if i < product.rating %} <i class="fas fa-star"></i>
                             {% else %}
-                                <i class="far fa-star"></i>
+                            <i class="far fa-star"></i>
                             {% endif %}
-                        {% endfor %}
+                            {% endfor %}
                     </div>
                     <span class="review-count">({{ product.review_count }} reviews)</span>
                 </div>
@@ -42,7 +42,11 @@
                     <div class="discounted-price">
                         <span class="current-price">${{ product.price }}</span>
                         <span class="original-price">${{ product.original_price }}</span>
-                        <span class="discount-badge">Save {{ product.discount }}%</span>
+                        {% if product.discount.endswith('%') %}
+                        <span class="discount-badge">-{{ product.discount }}</span>
+                        {% else %}
+                        <span class="discount-badge">-{{ product.discount }}%</span>
+                        {% endif %}
                     </div>
                     {% else %}
                     <span class="current-price">${{ product.price }}</span>
